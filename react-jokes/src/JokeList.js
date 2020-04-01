@@ -24,8 +24,17 @@ state = { jokes: JSON.parse(window.localStorage.getItem("jokes") || "[]") }
       });
       jokes.push({id: uuid(), text: res.data.joke, votes: 0})
     } 
-    this.setState({ jokes: jokes });
-    window.localStorage.setItem( "jokes", JSON.stringify(jokes))
+    this.setState(
+      st => ({
+        jokes: [...st.jokes, ...jokes]
+      }),
+      () =>
+        window.localStorage.setItem( "jokes", JSON.stringify(this.state.jokes))
+    );
+  }
+
+  handleClick = () => {
+    this.getJokes();
   }
 
   handleVote = (id, delta) => {
@@ -33,7 +42,8 @@ state = { jokes: JSON.parse(window.localStorage.getItem("jokes") || "[]") }
         jokes: st.jokes.map(j => 
           j.id === id ? {...j, votes: j.votes + delta } : j 
         )
-      })
+      }),
+      () => window.localStorage.setItem("jokes", JSON.stringify(this.state.jokes))
     )
   }
 
