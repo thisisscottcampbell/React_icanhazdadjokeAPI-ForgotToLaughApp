@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
+import Joke from './Joke'
 
 class JokeList extends Component {
 
@@ -21,9 +22,13 @@ state = { jokes: [] }
 }
 
   render() {
+    const jk = this.state.jokes.map(jk => (
+      <Joke joke={jk} /> 
+    ));
     return (
-      <div>
+      <div className="JokeList">
         <h1>Joke Nah</h1>
+        {jk}
       </div>
     );
   }
