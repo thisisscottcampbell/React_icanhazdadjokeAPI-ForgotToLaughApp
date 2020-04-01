@@ -10,9 +10,13 @@ class JokeList extends Component {
     numJokesToGet: 10
   }
 
-state = { jokes: [] }
+state = { jokes: JSON.parse(window.localStorage.getItem("jokes") || "[]") }
 
   componentDidMount = async() => {
+    if(this.state.jokes.length === 0) this.getJokes();
+  }
+
+  getJokes = async () => {
     let jokes = [];
     while (jokes.length < this.props.numJokesToGet) {
       let res = await axios.get("https://icanhazdadjoke.com/", { 
@@ -20,7 +24,8 @@ state = { jokes: [] }
       });
       jokes.push({id: uuid(), text: res.data.joke, votes: 0})
     } 
-    this.setState({ jokes: jokes })
+    this.setState({ jokes: jokes });
+    window.localStorage.setItem( "jokes", JSON.stringify(jokes))
   }
 
   handleVote = (id, delta) => {
